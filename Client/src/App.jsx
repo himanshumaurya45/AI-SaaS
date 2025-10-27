@@ -16,14 +16,14 @@ function App() {
     <div>
       <Routes>
         <Route path='/' element={<Home/>}/>
+        <Route path='/write-article' element={<WriteArticle/>}/>
+          <Route path='/blog-titles' element={<BlogTitle/>}/>
+          <Route path='/generate-images' element={<GenerateImages/>}/>
+          <Route path='/remove-background' element={<RemoveBackground/>}/>
+          <Route path='/remove-object' element={<RemoveObject/>}/>
+          <Route path='/review-resume' element={<ReviewResume/>}/>
         <Route path='/ai' element={<Layout/>}>
           <Route index element={<DashBoard/>}/>
-          <Route path='write-article' element={<WriteArticle/>}/>
-          <Route path='blog-titles' element={<BlogTitle/>}/>
-          <Route path='generate-images' element={<GenerateImages/>}/>
-          <Route path='remove-background' element={<RemoveBackground/>}/>
-          <Route path='remove-object' element={<RemoveObject/>}/>
-          <Route path='review-resume' element={<ReviewResume/>}/>
           <Route path='community' element={<Community/>}/>
         </Route>
       </Routes>

@@ -8,3 +8,11 @@
 @theme{
   --color-primary: #5CE65C
 }
+
+.reset-tw,.reset-tw *{
+  all:revert !important;
+}
+
+.cl-drawerRoot{
+  z-index:10
+}
