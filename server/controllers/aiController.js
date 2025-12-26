@@ -1,10 +1,16 @@
 import {OpenAI} from "openai";
-import {sql} from "../configs/db.js";
+
+import sql from "../configs/db.js";
 import { clerkClient } from "@clerk/express";
 import axios from "axios";
 import {v2 as cloudinary} from "cloudinary";
 import fs from "fs";
-import pdf from "pdf-parse";
+import { createRequire } from "module";
+import FormData from "form-data";
+
+const require = createRequire(import.meta.url);
+const pdf = require("pdf-parse");
+
 
 const AI=new OpenAI({
     apiKey:process.env.GEMINI_API_KEY,
@@ -110,7 +116,7 @@ export const generateImage=async(req,res)=> {
         const base64Image=`data:image/png;base64,${Buffer.from(data,'binary').toString('base64')}`;
 
         const {secure_url}=await cloudinary.uploader.upload(base64Image);
-        await sql `INSERT INTO creations (user_id,content,type,publish)
+        await sql `INSERT INTO creations (user_id,prompt,content,type,publish)
         VALUES (${userId},${prompt},${secure_url},"image",${publish ?? false})`;
         res.json({success:true,content:secure_url});
     } catch (error) {

@@ -3,6 +3,12 @@ import { assets } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import { Edit, Sparkle, Sparkles } from 'lucide-react';
 import Markdown from 'react-markdown';
+import { use } from 'react';
+import { useAuth } from '@clerk/clerk-react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+
+axios.defaults.baseURL=import.meta.env.VITE_BASE_URL;
 
 function WriteArticle() {
   const articleLength=[
@@ -16,8 +22,30 @@ function WriteArticle() {
   const [content,setContent]=useState("");
   const [input,setInput]=useState("");
 
+  const {getToken}=useAuth();
+
   const onSubmitHandler = async (e)=> {
     e.preventDefault();
+    try {
+      setLoading(true);
+      const prompt=`Write a detailed and informative blog article about ${input}. The article should be around ${selectedLength.length} words long. Make sure to include relevant subheadings, examples, and a conclusion.`;
+      const {data}=await axios.post('/api/ai/generate-article',{prompt,length:selectedLength.length},{
+        headers: {
+          Authorization: `Bearer ${await getToken()}`
+        }
+      })
+
+      if(data.success){
+        setContent(data.article);
+        setLoading(false);
+      }
+      else{
+        toast.error("Failed to generate article. Please try again.");
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.",error);
+    }
+    setLoading(false);
   }
   return (
     <div className='h-full p-6 flex justify-center items-start flex-wrap gap-4 text-slate-700'>
